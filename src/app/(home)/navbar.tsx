@@ -7,24 +7,13 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { NavbarSidebar } from "./navbar-sidebar";
+import { MenuIcon } from "lucide-react";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["700"],
 });
-
-type NavbarItemProps = {
-  href: string;
-  isActive?: boolean;
-  children: React.ReactNode;
-};
-const NavbarItem = ({ href, isActive, children }: NavbarItemProps) => {
-  return (
-    <Button variant={isActive ? "default" : "reverse"} asChild>
-      <Link href={href}>{children}</Link>
-    </Button>
-  );
-};
 
 const navbarItems = [
   {
@@ -51,6 +40,7 @@ const navbarItems = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <nav className="h-20 flex border-b justify-between font-medium bg-white">
@@ -59,6 +49,12 @@ export function Navbar() {
           funroad
         </span>
       </Link>
+
+      <NavbarSidebar
+        items={navbarItems}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      />
 
       <div className="items-center gap-4 hidden md:flex">
         {navbarItems.map((item) => (
@@ -88,6 +84,29 @@ export function Navbar() {
           <Link href="/sign-up">Start selling</Link>
         </Button>
       </div>
+
+      <div className="flex lg:hidden items-center justify-center">
+        <Button
+          variant="noShadow"
+          className="h-full border-transparent bg-white"
+          onClick={() => setIsOpen(true)}
+        >
+          <MenuIcon size={32} />
+        </Button>
+      </div>
     </nav>
   );
 }
+
+type NavbarItemProps = {
+  href: string;
+  isActive?: boolean;
+  children: React.ReactNode;
+};
+const NavbarItem = ({ href, isActive, children }: NavbarItemProps) => {
+  return (
+    <Button variant={isActive ? "default" : "reverse"} asChild>
+      <Link href={href}>{children}</Link>
+    </Button>
+  );
+};
