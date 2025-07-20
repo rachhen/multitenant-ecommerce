@@ -6,6 +6,8 @@ import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
+import nodemailer from "nodemailer";
 
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
@@ -24,6 +26,19 @@ export default buildConfig({
   collections: [Users, Media, Categories],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
+  email: nodemailerAdapter({
+    defaultFromAddress: "info@payloadcms.com",
+    defaultFromName: "Payload",
+    // Any Nodemailer transport can be used
+    transport: nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      auth: {
+        user: "lqaxoljyxbu4pzmt@ethereal.email",
+        pass: "RUqrwdpUHjvA4AsatM",
+      },
+    }),
+  }),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
